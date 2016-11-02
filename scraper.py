@@ -99,6 +99,7 @@ soup = BeautifulSoup(html, 'lxml')
 import urllib
 import urlparse
 block = soup.find('div',{'class':'large-12 column content-text'})
+print block
 fileLinks = block.findAll('a', href=True)
 for fileLink in fileLinks:
     url = fileLink['href']
@@ -115,28 +116,6 @@ for fileLink in fileLinks:
         csvMth = t.split(' in ')[-1][:3]
         csvMth = convert_mth_strings(csvMth.upper())
         data.append([csvYr, csvMth, url])
-
-#### SCRAPE DATA
-
-import urllib
-import urlparse
-block = soup.find('div',{'class':'large-12 column content-text'})
-headers = block.findAll('h3')
-for header in headers:
-    title = header.text
-    ns = header.find_next_sibling('p')
-    fileLinks = ns.findAll('a', href=True)
-    for fileLink in fileLinks:
-        url = fileLink['href']
-        t = fileLink.text
-        if '.csv' in url and 'nvoice' in t:
-            parsed_link = urlparse.urlsplit(url.encode('utf8'))
-            parsed_link = parsed_link._replace(path=urllib.quote(parsed_link.path))
-            encoded_link = parsed_link.geturl()
-            csvYr = title.split(' ')[1]
-            csvMth = title.split(' ')[0][:3]
-            csvMth = convert_mth_strings(csvMth.upper())
-            data.append([csvYr, csvMth, url])
 
 
 #### STORE DATA 1.0
