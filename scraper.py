@@ -93,7 +93,6 @@ data = []
 html = urllib2.urlopen(url)
 soup = BeautifulSoup(html, 'lxml')
 
-<<<<<<< HEAD
 
 #### SCRAPE DATA
 
@@ -116,7 +115,6 @@ for fileLink in fileLinks:
         csvMth = t.split(' in ')[-1][:3]
         csvMth = convert_mth_strings(csvMth.upper())
         data.append([csvYr, csvMth, url])
-=======
 
 #### SCRAPE DATA
 
@@ -139,7 +137,7 @@ for header in headers:
             csvMth = title.split(' ')[0][:3]
             csvMth = convert_mth_strings(csvMth.upper())
             data.append([csvYr, csvMth, url])
->>>>>>> 93489920fdd40ebec0d181e9e3a105a44e7f59b4
+
 
 #### STORE DATA 1.0
 
@@ -162,8 +160,3 @@ if errors > 0:
 
 
 #### EOF
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 93489920fdd40ebec0d181e9e3a105a44e7f59b4
