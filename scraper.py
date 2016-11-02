@@ -99,7 +99,6 @@ soup = BeautifulSoup(html, 'lxml')
 import urllib
 import urlparse
 block = soup.find('div',{'class':'large-12 column content-text'})
-print block
 fileLinks = block.findAll('a', href=True)
 for fileLink in fileLinks:
     url = fileLink['href']
