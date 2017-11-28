@@ -96,25 +96,39 @@ soup = BeautifulSoup(html, 'lxml')
 
 #### SCRAPE DATA
 
-import urllib
-import urlparse
-block = soup.find('div',{'class':'large-12 column content-text'})
-fileLinks = block.findAll('a', href=True)
-for fileLink in fileLinks:
-    url = fileLink['href']
-    t = fileLink.text
-    if '.csv' in url and 'nvoice' in t:
-        parsed_link = urlparse.urlsplit(url.encode('utf8'))
-        parsed_link = parsed_link._replace(path=urllib.quote(parsed_link.path))
-        encoded_link = parsed_link.geturl()
-        csvYr = url.replace('.-FINAL', '').split('.csv')[0][-4:]
-        if '-16' in csvYr:
-            csvYr = '2016'
-        if '-250' in csvYr:
-            csvYr = '2015'
-        csvMth = t.split(' in ')[-1][:3]
-        csvMth = convert_mth_strings(csvMth.upper())
-        data.append([csvYr, csvMth, url])
+blocks = soup.find_all('div', 'tab__content-inner')
+for block in blocks:
+    links = block.find_all('a')
+    for link in links:
+        if '.csv' in link['href']:
+            url = link['href']
+            title = url.split('/')[-1].replace('.csv', '').split('-')
+            if len(title[-1]) > 4:
+                if len(title) == 2:
+                    csvMth = title[-1][:3]
+                    csvYr = title[-1][-4:]
+                else:
+                    if 'August' in title[-1]:
+                        csvMth = title[-1][:3]
+                        csvYr = '2016'
+                    if 'March' in title[-1]:
+                        csvMth = title[-1][:3]
+                        csvYr = '2017'
+            elif len(title[-1]) == 4:
+                if '20' in title[-1]:
+                    csvMth = title[-2][:3]
+                    csvYr = title[-1][:4]
+                else:
+                    csvMth = title[-1][:3]
+                    csvYr = '2016'
+            elif len(title[-1]) == 2:
+                csvMth = title[-2][:3]
+                csvYr = '20'+title[-1]
+            else:
+                csvMth = title[0][:3]
+                csvYr = '20'+title[1]
+            csvMth = convert_mth_strings(csvMth.upper())
+            data.append([csvYr, csvMth, url])
 
 
 #### STORE DATA 1.0
